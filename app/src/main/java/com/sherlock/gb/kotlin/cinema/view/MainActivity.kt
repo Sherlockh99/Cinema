@@ -1,8 +1,8 @@
-package com.sherlock.gb.kotlin.cinema
+package com.sherlock.gb.kotlin.cinema.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.sherlock.gb.kotlin.cinema.ui.main.MainFragment
+import com.sherlock.gb.kotlin.cinema.R
 
 class MainActivity : AppCompatActivity() {
 

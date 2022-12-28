@@ -1,4 +1,4 @@
-package com.sherlock.gb.kotlin.cinema.ui.main
+package com.sherlock.gb.kotlin.cinema.view
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sherlock.gb.kotlin.cinema.R
+import com.sherlock.gb.kotlin.cinema.viewmodel.MainViewModel
 
 class MainFragment : Fragment() {
 

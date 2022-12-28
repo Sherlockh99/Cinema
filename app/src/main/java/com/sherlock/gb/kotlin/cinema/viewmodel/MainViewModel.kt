@@ -1,4 +1,4 @@
-package com.sherlock.gb.kotlin.cinema.ui.main
+package com.sherlock.gb.kotlin.cinema.viewmodel
 
 import androidx.lifecycle.ViewModel
 
