@@ -17,11 +17,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val mainFragment = MainFragment()
+        val firstFragment = FirstFragment()
+        val secondFragment = SecondFragment()
+
         setFragment(mainFragment)
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> setFragment(mainFragment)
+                R.id.favorites -> setFragment(firstFragment)
+                R.id.ratings -> setFragment(secondFragment)
             }
             true
         }

@@ -3,4 +3,11 @@
     <string name="home">Home</string>
     <string name="favorites">Favorites</string>
     <string name="ratings">Ratings</string>
+    <string name="now_playing">Now playing</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="error">Error</string>
+    <string name="reload">Reload</string>
+    <string name="about_program">About program</string>
+    <string name="message_dialog">Program was created by Sherlock</string>
+    <string name="yes">Yes</string>
 </resources>
