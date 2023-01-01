@@ -2,7 +2,6 @@ package com.sherlock.gb.kotlin.cinema.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sherlock.gb.kotlin.cinema.model.AppState
 import com.sherlock.gb.kotlin.cinema.model.Repository
 import com.sherlock.gb.kotlin.cinema.model.RepositoryImpl
 

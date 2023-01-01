@@ -16,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sherlock.gb.kotlin.cinema.R
 import com.sherlock.gb.kotlin.cinema.databinding.FragmentMainBinding
 import com.sherlock.gb.kotlin.cinema.model.AboutMovie
-import com.sherlock.gb.kotlin.cinema.model.AppState
+import com.sherlock.gb.kotlin.cinema.viewmodel.AppState
 import com.sherlock.gb.kotlin.cinema.viewmodel.MainViewModel
 
 class MainFragment : Fragment(), CustomRecyclerAdapterNowPlaying.OnItemClickListenerNow,
