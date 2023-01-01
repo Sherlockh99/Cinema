@@ -10,6 +10,6 @@ class RepositoryImpl : Repository {
     }
 
     override fun getAboutMovieLocalStorageUpcoming(): List<AboutMovie> {
-        return nowPlaying()
+        return upcoming()
     }
 }
