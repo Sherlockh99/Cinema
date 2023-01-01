@@ -26,7 +26,6 @@ class MainViewModel(
                     } else {
                         repositoryImpl.getAboutMovieLocalStorageUpcoming()
                     }
-
                 )
             )
         }.start()

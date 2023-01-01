@@ -79,6 +79,4 @@ class MainFragmentAdapter(private var onItemViewClickListener: OnItemViewClickLi
     override fun getItemCount(): Int {
         return aboutMovie.size
     }
-
-
 }

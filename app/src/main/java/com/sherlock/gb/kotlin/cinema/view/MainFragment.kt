@@ -99,6 +99,36 @@ class MainFragment : Fragment() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+
+        inflater.inflate(R.menu.main_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+        val manager = requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchItem = menu.findItem(R.id.search)
+        val searchView = searchItem?.actionView as SearchView
+        searchView.setSearchableInfo(manager.getSearchableInfo(requireActivity().componentName))
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchView.clearFocus()
+                searchView.setQuery("", false)
+                searchItem.collapseActionView()
+                Toast.makeText(
+                    context,
+                    "Looking for $query", Toast.LENGTH_LONG
+                ).show()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                Toast.makeText(
+                    context,
+                    "Looking for $newText", Toast.LENGTH_LONG
+                ).show()
+                return false
+            }
+        })
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle presses on the action bar menu items
         when (item.itemId) {
