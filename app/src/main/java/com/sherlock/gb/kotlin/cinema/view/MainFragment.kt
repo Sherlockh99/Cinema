@@ -77,7 +77,7 @@ class MainFragment : Fragment() {
                 adapter = initAdapter()
                 adapter.setAboutMovie(viewModel.getUpcomingMovie(),true)
 
-                recyclerViewNowPlaying.adapter = adapter
+                recyclerViewUpComing.adapter = adapter
 
                 binding.upcoming.text = getString(R.string.upcoming)
                 binding.nowPlaying.text = getString(R.string.now_playing)

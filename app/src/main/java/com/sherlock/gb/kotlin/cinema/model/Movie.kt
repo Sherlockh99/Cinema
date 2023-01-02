@@ -8,5 +8,5 @@ data class Movie(
     val movie_title: String,
     val original_title: String,
     val year: Int,
-    val picture: Int = 0
+    val picture: Int
 ) : Parcelable

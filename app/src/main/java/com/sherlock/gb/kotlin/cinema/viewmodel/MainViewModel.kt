@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sherlock.gb.kotlin.cinema.model.Repository
 import com.sherlock.gb.kotlin.cinema.model.RepositoryImpl
+import java.lang.Thread.sleep
 
 class MainViewModel(
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData(),
@@ -17,7 +18,7 @@ class MainViewModel(
         liveDataToObserve.value = AppState.Loading
 
         Thread {
-            Thread.sleep(1000)
+            sleep(1000)
 
             liveDataToObserve.postValue(
                 AppState.Success(

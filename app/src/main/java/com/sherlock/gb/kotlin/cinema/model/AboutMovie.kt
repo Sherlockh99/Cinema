@@ -18,11 +18,11 @@ data class AboutMovie(
             "и незаконных уличных гонок. Брайан также полицейский, и его задание — втереться в " +
             "доверие к Торетто, подозреваемому в причастности к дерзким грабежам грузовиков, " +
             "совершаемым прямо на ходу.",
-    var isLike: Boolean = true,
-    val picture: Int = R.drawable.fast_and_furios
+    var isLike: Boolean = true
+    //val picture: Int = R.drawable.fast_and_furios
  ): Parcelable
 
-fun getDefaultMovie() = Movie("Форсаж","The Fast and the Furious",2001)
+fun getDefaultMovie() = Movie("Форсаж","The Fast and the Furious",2001,R.drawable.fast_and_furios)
 
 fun nowPlaying(): List<AboutMovie> {
     val genre = "action, criminal"
@@ -30,6 +30,7 @@ fun nowPlaying(): List<AboutMovie> {
         AboutMovie(
             Movie("Двойной форсаж",
                 "2 Fast 2 Furious",
+                2003,
                 R.drawable.fast_and_furios2),
             "27.11.2003",
             "7.2",
@@ -47,6 +48,7 @@ fun nowPlaying(): List<AboutMovie> {
         AboutMovie(
             Movie("Тройной форсаж: Токийский Дрифт",
                 "The Fast and the Furious: Tokyo Drift",
+                2006,
                 R.drawable.fast_and_furios3),
             "27.11.2006",
             "6.9",
@@ -67,6 +69,7 @@ fun nowPlaying(): List<AboutMovie> {
         AboutMovie(
             Movie("Форсаж 4",
                 "Fast & Furious",
+                2009,
                 R.drawable.fast_and_furios4),
             "27.11.2009",
             "6.9",
@@ -83,7 +86,10 @@ fun nowPlaying(): List<AboutMovie> {
                     "они приходят к идеальной форме отмщения — педали газа, вдавленной до упора."
         ),
         AboutMovie(
-            Movie("Форсаж 5", "Fast Five", R.drawable.fast_and_furios5),
+            Movie("Форсаж 5",
+                "Fast Five",
+                2011,
+                R.drawable.fast_and_furios5),
             "27.11.2011",
             "7.6",
             genre,
@@ -104,7 +110,10 @@ fun upcoming(): List<AboutMovie> {
     val genre = "action, criminal"
     return listOf(
         AboutMovie(
-            Movie("Форсаж 6", "Furious 6", R.drawable.fast_and_furios6),
+            Movie("Форсаж 6",
+                "Furious 6",
+                2013,
+                R.drawable.fast_and_furios6),
             "27.11.2013",
             "7.0",
             genre,
@@ -124,7 +133,10 @@ fun upcoming(): List<AboutMovie> {
                     "к своей семье."
         ),
         AboutMovie(
-            Movie("Форсаж 7", "Fast & Furious 7", R.drawable.fast_and_furios7),
+            Movie("Форсаж 7",
+                "Fast & Furious 7",
+                2015,
+                R.drawable.fast_and_furios7),
             "27.11.2015",
             "7.0",
             genre,
@@ -138,7 +150,10 @@ fun upcoming(): List<AboutMovie> {
                     "знаменитый злодей. Скорость не знает границ."
         ),
         AboutMovie(
-            Movie("Форсаж 8", "Spider-Man 8", R.drawable.fast_and_furios8),
+            Movie("Форсаж 8",
+                "Spider-Man 8",
+                2017,
+                R.drawable.fast_and_furios8),
             "27.11.2017",
             "6.2",
             genre,
@@ -152,7 +167,10 @@ fun upcoming(): List<AboutMovie> {
                     "и по совместительству королева киберпреступности, дороги друзей разойдутся."
         ),
         AboutMovie(
-            Movie("Форсаж 9", "F9", R.drawable.fast_and_furios9),
+            Movie("Форсаж 9",
+                "F9",
+                2021,
+                R.drawable.fast_and_furios9),
             "27.11.2021",
             "5.7",
             genre,
@@ -168,6 +186,6 @@ fun upcoming(): List<AboutMovie> {
                     "сталкивается с опасным преступником и самым безбашенным водителем из всех, " +
                     "с кем они имели дело. Ситуация усложняется тем, что этот человек — " +
                     "брат Доминика Джейкоб, которого много лет назад изгнали из семьи."
-        ),
+        )
     )
 }

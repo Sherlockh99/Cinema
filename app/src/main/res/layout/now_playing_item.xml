@@ -49,5 +49,4 @@
         app:layout_constraintEnd_toStartOf="@+id/now_playing_rating_movie"
         app:layout_constraintTop_toBottomOf="@+id/now_playing_title_movie"/>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
