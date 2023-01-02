@@ -16,11 +16,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.sherlock.gb.kotlin.cinema.R
 import com.sherlock.gb.kotlin.cinema.databinding.FragmentMainBinding
 import com.sherlock.gb.kotlin.cinema.model.AboutMovie
-import com.sherlock.gb.kotlin.cinema.model.AppState
+import com.sherlock.gb.kotlin.cinema.viewmodel.AppState
 import com.sherlock.gb.kotlin.cinema.viewmodel.MainViewModel
 
-class MainFragment : Fragment(), CustomRecyclerAdapterNowPlaying.OnItemClickListenerNow,
-    CustomRecyclerAdapterUpcoming.OnItemClickListenerUpcoming {
+class MainFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding
@@ -30,15 +29,8 @@ class MainFragment : Fragment(), CustomRecyclerAdapterNowPlaying.OnItemClickList
         fun newInstance() = MainFragment()
     }
 
+    private lateinit var adapter : MainFragmentAdapter
     private lateinit var viewModel: MainViewModel
-
-    /**
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-    */
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,12 +61,32 @@ class MainFragment : Fragment(), CustomRecyclerAdapterNowPlaying.OnItemClickList
             is AppState.Success -> {
                 val AboutMovieData = appState.AboutMovieData
                 binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.mainView, "Success", Snackbar.LENGTH_LONG).show()
-                setData(AboutMovieData)
+                adapter = initAdapter()
+                adapter.setAboutMovie(AboutMovieData,false)
+
+                val recyclerViewNowPlaying: RecyclerView = binding.recyclerViewLinesNowPlaying
+                recyclerViewNowPlaying.layoutManager = LinearLayoutManager(
+                    context,
+                    LinearLayoutManager.HORIZONTAL, false)
+                recyclerViewNowPlaying.adapter = adapter
+
+                val recyclerViewUpComing: RecyclerView = binding.recyclerViewLinesUpcoming
+                recyclerViewUpComing.layoutManager = LinearLayoutManager(
+                    context,
+                    LinearLayoutManager.HORIZONTAL, false)
+                adapter = initAdapter()
+                adapter.setAboutMovie(viewModel.getUpcomingMovie(),true)
+
+                recyclerViewUpComing.adapter = adapter
+
+                binding.upcoming.text = getString(R.string.upcoming)
+                binding.nowPlaying.text = getString(R.string.now_playing)
             }
+
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE
             }
+
             is AppState.Error -> {
                 binding.loadingLayout.visibility = View.GONE
 
@@ -85,47 +97,6 @@ class MainFragment : Fragment(), CustomRecyclerAdapterNowPlaying.OnItemClickList
                     .show()
             }
         }
-    }
-
-    private fun setData(AboutMovieData: AboutMovie) {
-        val recyclerViewNowPlaying: RecyclerView = binding.recyclerViewLinesNowPlaying
-        recyclerViewNowPlaying.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.HORIZONTAL, false
-        )
-        recyclerViewNowPlaying.adapter =
-            CustomRecyclerAdapterNowPlaying(
-                fillList(AboutMovieData.movie.movie_title),
-                fillList(AboutMovieData.release_date), fillList(AboutMovieData.rating),
-                fillListPicture(AboutMovieData.movie.picture), this
-            )
-
-        val recyclerViewUpcoming: RecyclerView = binding.recyclerViewLinesUpcoming
-        recyclerViewUpcoming.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.HORIZONTAL, false
-        )
-        recyclerViewUpcoming.adapter =
-            CustomRecyclerAdapterUpcoming(
-                fillList(AboutMovieData.movie.movie_title),
-                fillList(AboutMovieData.release_date),
-                fillListPicture(AboutMovieData.movie.picture), this
-            )
-        recyclerViewUpcoming.adapter
-        binding.upcoming.text = getString(R.string.upcoming)
-        binding.nowPlaying.text = getString(R.string.now_playing)
-    }
-
-    private fun fillList(str: String): List<String> {
-        val data = mutableListOf<String>()
-        (0..30).forEach { i -> data.add(str) }
-        return data
-    }
-
-    private fun fillListPicture(pic: Int): List<Int> {
-        val data = mutableListOf<Int>()
-        (0..30).forEach { i -> data.add(pic) }
-        return data
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -156,7 +127,6 @@ class MainFragment : Fragment(), CustomRecyclerAdapterNowPlaying.OnItemClickList
                 return false
             }
         })
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -179,18 +149,20 @@ class MainFragment : Fragment(), CustomRecyclerAdapterNowPlaying.OnItemClickList
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onItemClickNowPlaying(position: Int) {
-        activity?.supportFragmentManager!!.beginTransaction().apply {
-            replace(R.id.flFragment, ThirdFragment())
-            commit()
-        }
-    }
-
-    override fun onItemClickUpcoming(position: Int) {
-        activity?.supportFragmentManager!!.beginTransaction().apply {
-            replace(R.id.flFragment, ThirdFragment())
-            commit()
-        }
+    private fun initAdapter() : MainFragmentAdapter{
+        return MainFragmentAdapter(object : MainFragmentAdapter.OnItemViewClickListener{
+            override fun onItemClick(aboutMovie: AboutMovie) {
+                val fragmentManager = activity?.supportFragmentManager
+                if (fragmentManager != null) {
+                    val bundle = Bundle()
+                    bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, aboutMovie)
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.flFragment, DetailsFragment.newInstance(bundle))
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+            }
+        })
     }
 
 }

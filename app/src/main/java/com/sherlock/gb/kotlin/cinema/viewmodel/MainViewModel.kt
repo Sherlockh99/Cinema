@@ -2,27 +2,32 @@ package com.sherlock.gb.kotlin.cinema.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sherlock.gb.kotlin.cinema.model.AppState
 import com.sherlock.gb.kotlin.cinema.model.Repository
 import com.sherlock.gb.kotlin.cinema.model.RepositoryImpl
+import java.lang.Thread.sleep
 
 class MainViewModel(
     private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData(),
     private val repositoryImpl: Repository = RepositoryImpl()
 ) : ViewModel() {
-
     fun getLiveData() = liveDataToObserve
+    fun getAboutMovie() = getDataFromLocalSource(true)
+    fun getUpcomingMovie() = repositoryImpl.getAboutMovieLocalStorageUpcoming()
 
-    fun getAboutMovie() = getDataFromLocalSource()
-
-    private fun getDataFromLocalSource() {
+    private fun getDataFromLocalSource(isNowPlaying: Boolean) {
         liveDataToObserve.value = AppState.Loading
 
         Thread {
-            Thread.sleep(2000)
+            sleep(1000)
 
             liveDataToObserve.postValue(
-                AppState.Success(repositoryImpl.getAboutMovieLocalStorage())
+                AppState.Success(
+                    if (isNowPlaying) {
+                        repositoryImpl.getAboutMovieLocalStorageNowPlaying()
+                    } else {
+                        repositoryImpl.getAboutMovieLocalStorageUpcoming()
+                    }
+                )
             )
         }.start()
     }
