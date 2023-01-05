@@ -50,19 +50,23 @@ class DetailsFragment : Fragment(){
             binding.detailsRevenueMovie.text = resources.getText(R.string.revenue)
                     as String + " " + aboutMovie.revenue
             binding.detailsDescriptionMovie.text = aboutMovie.description
+
             var heart: ImageView = binding.detailsIsLikeMovie
-            if (!aboutMovie.isLike) {
-                heart.setImageResource(R.drawable.ic_baseline_favorite_border_24_empty)
-            } else {
-                heart.setImageResource(R.drawable.ic_baseline_favorite_24_yellow)
-            }
-            heart.setOnClickListener {
-                if (aboutMovie.isLike) {
+
+            heart.apply {
+                if (!aboutMovie.isLike) {
                     heart.setImageResource(R.drawable.ic_baseline_favorite_border_24_empty)
-                    aboutMovie.isLike = false
                 } else {
                     heart.setImageResource(R.drawable.ic_baseline_favorite_24_yellow)
-                    aboutMovie.isLike = true
+                }
+                heart.setOnClickListener {
+                    if (aboutMovie.isLike) {
+                        heart.setImageResource(R.drawable.ic_baseline_favorite_border_24_empty)
+                        aboutMovie.isLike = false
+                    } else {
+                        heart.setImageResource(R.drawable.ic_baseline_favorite_24_yellow)
+                        aboutMovie.isLike = true
+                    }
                 }
             }
         }
