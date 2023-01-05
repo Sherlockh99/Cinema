@@ -18,6 +18,7 @@ import com.sherlock.gb.kotlin.cinema.databinding.FragmentMainBinding
 import com.sherlock.gb.kotlin.cinema.model.AboutMovie
 import com.sherlock.gb.kotlin.cinema.viewmodel.AppState
 import com.sherlock.gb.kotlin.cinema.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
 
@@ -30,7 +31,9 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var adapter : MainFragmentAdapter
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +51,7 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
         val observer = Observer<AppState> {
             renderData(it)
         }
@@ -60,27 +63,34 @@ class MainFragment : Fragment() {
         when (appState) {
             is AppState.Success -> {
                 val AboutMovieData = appState.AboutMovieData
-                binding.loadingLayout.visibility = View.GONE
-                adapter = initAdapter()
-                adapter.setAboutMovie(AboutMovieData,false)
 
-                val recyclerViewNowPlaying: RecyclerView = binding.recyclerViewLinesNowPlaying
-                recyclerViewNowPlaying.layoutManager = LinearLayoutManager(
-                    context,
-                    LinearLayoutManager.HORIZONTAL, false)
-                recyclerViewNowPlaying.adapter = adapter
+                with(binding) {
+                    loadingLayout.visibility = View.GONE
 
-                val recyclerViewUpComing: RecyclerView = binding.recyclerViewLinesUpcoming
-                recyclerViewUpComing.layoutManager = LinearLayoutManager(
-                    context,
-                    LinearLayoutManager.HORIZONTAL, false)
-                adapter = initAdapter()
-                adapter.setAboutMovie(viewModel.getUpcomingMovie(),true)
+                    adapter = initAdapter()
+                    adapter.setAboutMovie(AboutMovieData, false)
 
-                recyclerViewUpComing.adapter = adapter
+                    val recyclerViewNowPlaying: RecyclerView = recyclerViewLinesNowPlaying
+                    recyclerViewNowPlaying.layoutManager = LinearLayoutManager(
+                        context,
+                        LinearLayoutManager.HORIZONTAL, false
+                    )
+                    recyclerViewNowPlaying.adapter = adapter
 
-                binding.upcoming.text = getString(R.string.upcoming)
-                binding.nowPlaying.text = getString(R.string.now_playing)
+                    val recyclerViewUpComing: RecyclerView = recyclerViewLinesUpcoming
+                    recyclerViewUpComing.layoutManager = LinearLayoutManager(
+                        context,
+                        LinearLayoutManager.HORIZONTAL, false
+                    )
+
+                    adapter = initAdapter()
+                    adapter.setAboutMovie(viewModel.getUpcomingMovie(), true)
+
+                    recyclerViewUpComing.adapter = adapter
+
+                    upcoming.text = getString(R.string.upcoming)
+                    nowPlaying.text = getString(R.string.now_playing)
+                }
             }
 
             is AppState.Loading -> {
@@ -88,13 +98,16 @@ class MainFragment : Fragment() {
             }
 
             is AppState.Error -> {
-                binding.loadingLayout.visibility = View.GONE
+                binding.apply {
+                    loadingLayout.visibility = View.GONE
 
-                Snackbar.make(binding.mainView, "Error", Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.reload)) {
-                        viewModel.getAboutMovie()
-                    }
-                    .show()
+                    Extensions.showSnackbar(
+                        mainView,
+                        getString(R.string.error),
+                        getString(R.string.reload),
+                        {viewModel.getAboutMovie()}
+                    )
+                }
             }
         }
     }
@@ -103,9 +116,31 @@ class MainFragment : Fragment() {
 
         inflater.inflate(R.menu.main_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+
         val manager = requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem?.actionView as SearchView
+
+        searchItem.apply {
+            searchView.also {
+
+                it.setSearchableInfo(manager.getSearchableInfo(requireActivity().componentName))
+                it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        it.clearFocus()
+                        it.setQuery("", false)
+                        collapseActionView()
+                        Extensions.showToast(mainView,query)
+                        return true
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        Extensions.showToast(mainView,newText)
+                        return false
+                    }
+                })
+            }
+        }
         searchView.setSearchableInfo(manager.getSearchableInfo(requireActivity().componentName))
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -133,16 +168,10 @@ class MainFragment : Fragment() {
         // Handle presses on the action bar menu items
         when (item.itemId) {
             R.id.about -> {
-                val builder = AlertDialog.Builder(requireContext())
-                //set title for alert dialog
-                builder.setTitle(R.string.about_program)
-                //set message for alert dialog
-                builder.setMessage(R.string.message_dialog)
-                builder.setIcon(android.R.drawable.ic_menu_info_details)
-                builder.setPositiveButton(R.string.yes) { dialogInterface, which ->
-                    builder
-                }
-                builder.show()
+                Extensions.showAlertDialog(
+                    this, R.string.about_program, R.string.message_dialog,
+                    android.R.drawable.ic_menu_info_details, R.string.yes
+                )
                 return true
             }
         }
@@ -152,12 +181,10 @@ class MainFragment : Fragment() {
     private fun initAdapter() : MainFragmentAdapter{
         return MainFragmentAdapter(object : MainFragmentAdapter.OnItemViewClickListener{
             override fun onItemClick(aboutMovie: AboutMovie) {
-                val fragmentManager = activity?.supportFragmentManager
-                if (fragmentManager != null) {
-                    val bundle = Bundle()
-                    bundle.putParcelable(DetailsFragment.BUNDLE_EXTRA, aboutMovie)
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.flFragment, DetailsFragment.newInstance(bundle))
+                activity?.supportFragmentManager?.apply {
+                    beginTransaction()
+                        .replace(R.id.flFragment,
+                            DetailsFragment.newInstance(Bundle().apply {}))
                         .addToBackStack("")
                         .commitAllowingStateLoss()
                 }
