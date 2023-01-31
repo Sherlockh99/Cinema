@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private fun setFragment(fragment: Fragment) =
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment, fragment)
-            addToBackStack("")
+            //addToBackStack("")
             commit()
         }
 }
