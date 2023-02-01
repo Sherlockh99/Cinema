@@ -75,7 +75,6 @@ class MainFragmentAdapter(private var onItemViewClickListener: OnItemViewClickLi
                 parent, false
             ) as View
         )
-
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
